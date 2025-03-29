@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINESTAR - Data Cleaner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .error {
+            color: #e74c3c;
+            margin-top: 10px;
+        }
+        .instructions {
+            background-color: #eaf7ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .instructions h3 {
+            margin-top: 0;
+        }
+        .language-selector {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-selector">
+        <a href="#" onclick="switchLanguage('id')" id="lang-id">Bahasa Indonesia</a> | 
+        <a href="#" onclick="switchLanguage('en')" id="lang-en">English</a>
+    </div>
+
+    <h1>MINESTAR - Excel Data Cleaner</h1>
+    
+    <div class="container">
+        <div class="instructions">
+            <h3 id="instructions-title">Petunjuk:</h3>
+            <p id="instructions-text">Unggah file Excel data mentah Anda untuk diproses sesuai dengan aturan berikut:</p>
+            <ul id="instructions-list">
+                <li>Kolom 'Machine' akan diubah menjadi 'Unit'</li>
+                <li>Tanggal Mulai dan Tanggal Selesai akan diformat ulang menjadi MM/DD/YYYY H:MM:SS</li>
+                <li>Durasi akan dikonversi ke jam dengan 2 angka desimal</li>
+                <li>Kategori akan ditetapkan berdasarkan awalan Delay Type:
+                    <ul>
+                        <li>D- → DELAY</li>
+                        <li>S- → STANDBY</li>
+                        <li>UX- → UNPLANNED DOWN</li>
+                        <li>X- → PLANNED DOWN</li>
+                        <li>XX- → EXTENDED LOSS</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file" id="file-label">Pilih File Excel (.xlsx atau .xls):</label>
+                <input type="file" id="file" name="file" accept=".xlsx, .xls" required>
+            </div>
+            
+            <button type="submit" class="btn" id="submit-btn">Proses File</button>
+            
+            {% if error %}
+            <div class="error">
+                <p>{{ error }}</p>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <footer>
+        <p>© 2024 MINESTAR REPORTING. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function switchLanguage(lang) {
+            const translations = {
+                'en': {
+                    'instructions-title': 'Instructions:',
+                    'instructions-text': 'Upload your raw Excel data file to be processed according to the following rules:',
+                    'instructions-list': `
+                        <li>Machine column will be mapped to Unit</li>
+                        <li>Start Date and Finish Date will be reformatted to MM/DD/YYYY H:MM:SS</li>
+                        <li>Duration will be converted to hours with 2 decimal places</li>
+                        <li>Categories will be set based on Delay Type prefixes:
+                            <ul>
+                                <li>D- → DELAY</li>
+                                <li>S- → STANDBY</li>
+                                <li>UX- → UNPLANNED DOWN</li>
+                                <li>X- → PLANNED DOWN</li>
+                                <li>XX- → EXTENDED LOSS</li>
+                            </ul>
+                        </li>
+                    `,
+                    'file-label': 'Select Excel File (.xlsx or .xls):',
+                    'submit-btn': 'Process File'
+                },
+                'id': {
+                    'instructions-title': 'Petunjuk:',
+                    'instructions-text': 'Unggah file Excel data mentah Anda untuk diproses sesuai dengan aturan berikut:',
+                    'instructions-list': `
+                        <li>Kolom 'Machine' akan diubah menjadi 'Unit'</li>
+                        <li>Tanggal Mulai dan Tanggal Selesai akan diformat ulang menjadi MM/DD/YYYY H:MM:SS</li>
+                        <li>Durasi akan dikonversi ke jam dengan 2 angka desimal</li>
+                        <li>Kategori akan ditetapkan berdasarkan awalan Delay Type:
+                            <ul>
+                                <li>D- → DELAY</li>
+                                <li>S- → STANDBY</li>
+                                <li>UX- → UNPLANNED DOWN</li>
+                                <li>X- → PLANNED DOWN</li>
+                                <li>XX- → EXTENDED LOSS</li>
+                            </ul>
+                        </li>
+                    `,
+                    'file-label': 'Pilih File Excel (.xlsx atau .xls):',
+                    'submit-btn': 'Proses File'
+                }
+            };
+
+            // Update text elements
+            document.getElementById('instructions-title').innerText = translations[lang]['instructions-title'];
+            document.getElementById('instructions-text').innerText = translations[lang]['instructions-text'];
+            document.getElementById('instructions-list').innerHTML = translations[lang]['instructions-list'];
+            document.getElementById('file-label').innerText = translations[lang]['file-label'];
+            document.getElementById('submit-btn').innerText = translations[lang]['submit-btn'];
+
+            // Update active language
+            document.getElementById('lang-en').style.fontWeight = lang === 'en' ? 'bold' : 'normal';
+            document.getElementById('lang-id').style.fontWeight = lang === 'id' ? 'bold' : 'normal';
+        }
+
+        // Set default language
+        document.getElementById('lang-id').style.fontWeight = 'bold';
+    </script>
+</body>
+</html> 
