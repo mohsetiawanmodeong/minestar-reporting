@@ -132,9 +132,154 @@
         .custom-file-label:hover {
             background-color: #2980b9;
         }
+        /* Loading spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .btn-loading {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        
+        /* Overlay for loading state */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .loading-overlay-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .loading-overlay .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0,0,0,.1);
+            border-radius: 50%;
+            border-top-color: #3498db;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 20px;
+        }
+        
+        /* Success/Complete styling */
+        .completed-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background-color: #2ecc71;
+            position: relative;
+            display: none;
+        }
+        
+        .completed-icon:after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 12px;
+            width: 20px;
+            height: 10px;
+            border-left: 5px solid white;
+            border-bottom: 5px solid white;
+            transform: rotate(-45deg);
+        }
+        
+        .button-container {
+            margin-top: 15px;
+        }
+        
+        .close-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .close-button:hover {
+            background-color: #2980b9;
+        }
+        
+        #instructions-steps {
+            background-color: #f1f9fe;
+            padding: 15px 15px 15px 40px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            line-height: 1.8;
+        }
+        
+        #instructions-steps li {
+            margin-bottom: 8px;
+        }
+        
+        #instructions-steps a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        #instructions-steps a:hover {
+            text-decoration: underline;
+        }
+        
+        .loading-subtext {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .loading-overlay-content {
+                width: 90%;
+                max-width: 320px;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-overlay-content">
+            <div class="spinner" id="loadingSpinner"></div>
+            <div class="completed-icon" id="completedIcon"></div>
+            <p id="loading-text">Memproses file, harap tunggu...</p>
+            <p class="loading-subtext" id="loading-subtext">Proses dapat memakan waktu beberapa saat. Harap jangan tutup browser.</p>
+            <div class="button-container">
+                <button id="closeButton" class="close-button" onclick="closeLoadingOverlay()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
     <div class="language-selector">
         <a href="#" onclick="switchLanguage('id')" id="lang-id">Bahasa Indonesia</a> | 
         <a href="#" onclick="switchLanguage('en')" id="lang-en">English</a>
@@ -151,7 +296,15 @@
         
         <div class="instructions">
             <h3 id="instructions-title">Petunjuk Penggunaan:</h3>
-            <p id="instructions-text">Unggah file Excel yang berisi data delay dan cycle dalam sheet terpisah. Aplikasi akan secara otomatis mendeteksi tipe data berdasarkan format kolom dan membersihkan semua sheet yang valid. <br> <b>Tarik data khusus LHD saja.</b></p>
+            <p id="instructions-text">Unggah file Excel yang berisi data DELAY dan CYCLE dalam sheet terpisah. Aplikasi akan secara otomatis mendeteksi tipe data berdasarkan format kolom dan membersihkan semua sheet yang valid serta membuat PERFORMANCE SUMMARY.</p>
+            
+            <ol id="instructions-steps">
+                <li>Filter dan pilih hanya data LHD Production (tanpa RB, 730, dan LHD Development)</li>
+                <li>Tarik data per DAY (24 jam), contoh: 28 Maret 2025</li>
+                <li>Atur rentang waktu dengan Start Time: 28 Maret 2025 00:00 dan Finish Time: 28 Maret 2025 23:59</li>
+                <li>Copy semua data Cycle dan Delay dari Minestar, lalu paste ke <a href="/download-template" id="template-link">file Template Excel</a></li>
+                <li>Lakukan proses secara terpisah untuk setiap site (GBC & DMLZ), lalu upload hasilnya ke sistem ini</li>
+            </ol>
             
             <div class="sheet-info">
                 <h3 id="sheet-info-title">Format File Excel:</h3>
@@ -193,7 +346,7 @@
             </div>
         </div>
         
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data" id="uploadForm">
             <div class="form-group">
                 <label for="file" id="file-label">Pilih File Excel (.xlsx atau .xls):</label>
                 <div class="file-input-container">
@@ -217,6 +370,229 @@
     </footer>
 
     <script>
+        // Global variable to track polling
+        let processingStatusInterval = null;
+        let startTime = null;
+        let processingTimer = null;
+
+        // Show loading indicator when form is submitted
+        document.getElementById('uploadForm').addEventListener('submit', function() {
+            // Show loading overlay
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            // Change button text and add loading spinner
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.innerHTML = '<span class="loading"></span> <span id="processing-text">Memproses...</span>';
+            submitBtn.classList.add('btn-loading');
+            submitBtn.disabled = true;
+            
+            // Update loading text based on current language
+            const currentLang = document.getElementById('lang-id').style.fontWeight === 'bold' ? 'id' : 'en';
+            if (currentLang === 'en') {
+                document.getElementById('loading-text').innerText = 'Processing file, please wait...';
+                document.getElementById('processing-text').innerText = 'Processing...';
+            } else {
+                document.getElementById('loading-text').innerText = 'Memproses file, harap tunggu...';
+                document.getElementById('processing-text').innerText = 'Memproses...';
+            }
+            
+            // Record start time for timer
+            startTime = new Date();
+            
+            // Start timer to show elapsed time
+            processingTimer = setInterval(function() {
+                updateProcessingTime();
+            }, 1000);
+            
+            // Start polling for processing status
+            processingStatusInterval = setInterval(checkProcessingStatus, 1000);
+            
+            // Create a hidden iframe to detect server response
+            const iframe = document.createElement('iframe');
+            iframe.name = 'download_frame';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            // Set the form to target the iframe
+            const form = document.getElementById('uploadForm');
+            const originalTarget = form.target;
+            form.target = 'download_frame';
+        });
+        
+        // Check processing status from server
+        function checkProcessingStatus() {
+            fetch('/processing-status')
+                .then(response => response.json())
+                .then(data => {
+                    // Update status display based on server response
+                    updateProcessingUI(data);
+                    
+                    // If processing is complete or error occurred, stop polling
+                    if (data.is_complete || data.error) {
+                        clearInterval(processingStatusInterval);
+                        clearInterval(processingTimer);
+                        
+                        if (data.error) {
+                            showErrorMessage(data.error);
+                        } else if (data.is_complete) {
+                            showCompletionMessage();
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking processing status:', error);
+                });
+        }
+        
+        // Update UI based on processing status
+        function updateProcessingUI(data) {
+            const currentLang = document.getElementById('lang-id').style.fontWeight === 'bold' ? 'id' : 'en';
+            
+            // Update processing text with sheet info
+            if (data.sheets_processed && data.sheets_processed.length > 0) {
+                let statusText = currentLang === 'en' ? 
+                    `Processing sheets: ${data.sheets_processed.join(', ')}` : 
+                    `Memproses sheet: ${data.sheets_processed.join(', ')}`;
+                
+                document.getElementById('loading-subtext').innerText = statusText;
+            }
+        }
+        
+        // Update processing time display
+        function updateProcessingTime() {
+            if (!startTime) return;
+            
+            const currentTime = new Date();
+            const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+            const minutes = Math.floor(elapsedSeconds / 60);
+            const seconds = elapsedSeconds % 60;
+            
+            const currentLang = document.getElementById('lang-id').style.fontWeight === 'bold' ? 'id' : 'en';
+            const timeText = currentLang === 'en' ? 
+                `Time elapsed: ${minutes}m ${seconds}s` : 
+                `Waktu berjalan: ${minutes}m ${seconds}s`;
+            
+            // Add time to loading text or a separate element
+            const loadingText = document.getElementById('loading-text');
+            const currentText = loadingText.innerText.split(' (')[0]; // Remove previous time if any
+            loadingText.innerText = `${currentText} (${timeText})`;
+        }
+        
+        // Show error message
+        function showErrorMessage(errorMsg) {
+            const currentLang = document.getElementById('lang-id').style.fontWeight === 'bold' ? 'id' : 'en';
+            const translations = {
+                'en': {
+                    'error-text': errorMsg || 'Error processing file. Please try again.',
+                    'close-btn': 'Close',
+                    'submit-btn': 'Process File'
+                },
+                'id': {
+                    'error-text': errorMsg || 'Terjadi kesalahan saat memproses file. Silakan coba lagi.',
+                    'close-btn': 'Tutup',
+                    'submit-btn': 'Proses File'
+                }
+            };
+            
+            // Hide spinner, keep icon hidden
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('completedIcon').style.display = 'none';
+            
+            // Update text and show close button
+            document.getElementById('loading-text').innerText = translations[currentLang]['error-text'];
+            document.getElementById('loading-text').style.color = '#e74c3c';
+            document.getElementById('closeButton').innerText = translations[currentLang]['close-btn'];
+            document.getElementById('closeButton').style.display = 'inline-block';
+            
+            // Hide loading subtext
+            if (document.getElementById('loading-subtext')) {
+                document.getElementById('loading-subtext').style.display = 'none';
+            }
+            
+            // Reset form
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.innerText = translations[currentLang]['submit-btn'];
+            submitBtn.classList.remove('btn-loading');
+            submitBtn.disabled = false;
+            
+            // Clean up any iframe
+            const iframe = document.querySelector('iframe[name="download_frame"]');
+            if (iframe) {
+                iframe.parentNode.removeChild(iframe);
+            }
+        }
+        
+        // Show completion message
+        function showCompletionMessage() {
+            // Prevent showing completion message multiple times
+            if (document.getElementById('completedIcon').style.display === 'block') {
+                return;
+            }
+            
+            const currentLang = document.getElementById('lang-id').style.fontWeight === 'bold' ? 'id' : 'en';
+            const translations = {
+                'en': {
+                    'complete-text': 'File processed successfully!',
+                    'close-btn': 'Close',
+                    'submit-btn': 'Process File'
+                },
+                'id': {
+                    'complete-text': 'File berhasil diproses!',
+                    'close-btn': 'Tutup',
+                    'submit-btn': 'Proses File'
+                }
+            };
+            
+            // Hide spinner, show completed icon
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('completedIcon').style.display = 'block';
+            
+            // Update text and show close button
+            document.getElementById('loading-text').innerText = translations[currentLang]['complete-text'];
+            document.getElementById('loading-text').style.color = '';  // Reset color
+            document.getElementById('closeButton').innerText = translations[currentLang]['close-btn'];
+            document.getElementById('closeButton').style.display = 'inline-block';
+            
+            // Hide loading subtext
+            if (document.getElementById('loading-subtext')) {
+                document.getElementById('loading-subtext').style.display = 'none';
+            }
+            
+            // Reset form
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.innerText = translations[currentLang]['submit-btn'];
+            submitBtn.classList.remove('btn-loading');
+            submitBtn.disabled = false;
+            
+            // If iframe exists, remove it
+            const iframe = document.querySelector('iframe[name="download_frame"]');
+            if (iframe) {
+                iframe.parentNode.removeChild(iframe);
+            }
+        }
+        
+        // Close loading overlay
+        function closeLoadingOverlay() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('completedIcon').style.display = 'none';
+            document.getElementById('closeButton').style.display = 'none';
+            
+            // Reset any timers
+            if (processingStatusInterval) {
+                clearInterval(processingStatusInterval);
+                processingStatusInterval = null;
+            }
+            
+            if (processingTimer) {
+                clearInterval(processingTimer);
+                processingTimer = null;
+            }
+            
+            // Refresh the page to reset the form and upload state
+            window.location.reload();
+        }
+
         function switchLanguage(lang) {
             const translations = {
                 'en': {
@@ -228,6 +604,15 @@
                     // Main instructions
                     'instructions-title': 'Instructions:',
                     'instructions-text': 'Upload an Excel file containing delay and cycle data in separate sheets. The application will automatically detect the data type based on column format and clean all valid sheets. Pull LHD data only.',
+                    
+                    // Instruction steps
+                    'instructions-steps': `
+                        <li>Filter and select only LHD Production data (exclude RB, 730, and LHD Development)</li>
+                        <li>Extract data for 1 full day (24 hours), example: March 28, 2025</li>
+                        <li>Set time range with Start Time: March 28, 2025 00:00 and Finish Time: March 28, 2025 23:59</li>
+                        <li>Copy all Cycle and Delay data from Minestar, then paste to the <a href="/download-template" id="template-link-en">Excel Template file</a></li>
+                        <li>Process separately for each site (GBC & DMLZ), then upload the results to this system</li>
+                    `,
                     
                     // Sheet info
                     'sheet-info-title': 'Excel File Format:',
@@ -267,7 +652,13 @@
                     
                     // Common translations
                     'file-label': 'Select Excel File (.xlsx or .xls):',
-                    'submit-btn': 'Process File'
+                    'submit-btn': 'Process File',
+                    'loading-text': 'Processing file, please wait...',
+                    'processing-text': 'Processing...',
+                    'complete-text': 'File processed successfully!',
+                    'close-btn': 'Close',
+                    'loading-subtext': 'Processing may take a moment. Please do not close your browser.',
+                    'error-text': 'Error processing file. Please try again.'
                 },
                 'id': {
                     // Template section
@@ -277,7 +668,16 @@
                     
                     // Main instructions
                     'instructions-title': 'Petunjuk Penggunaan:',
-                    'instructions-text': 'Unggah file Excel yang berisi data delay dan cycle dalam sheet terpisah. Aplikasi akan secara otomatis mendeteksi tipe data berdasarkan format kolom dan membersihkan semua sheet yang valid. <br> <b>Tarik data khusus LHD saja.</b>',
+                    'instructions-text': 'Unggah file Excel yang berisi data DELAY dan CYCLE dalam sheet terpisah. Aplikasi akan secara otomatis mendeteksi tipe data berdasarkan format kolom dan membersihkan semua sheet yang valid serta membuat PERFORMANCE SUMMARY.',
+                    
+                    // Instruction steps
+                    'instructions-steps': `
+                        <li>Filter dan pilih hanya data LHD Production (tanpa RB, 730, dan LHD Development)</li>
+                        <li>Tarik data untuk 1 hari penuh (24 jam), contoh: 28 Maret 2025</li>
+                        <li>Atur rentang waktu dengan Start Time: 28 Maret 2025 00:00 dan Finish Time: 28 Maret 2025 23:59</li>
+                        <li>Copy semua data Cycle dan Delay dari Minestar, lalu paste ke <a href="/download-template" id="template-link">file Template Excel</a></li>
+                        <li>Lakukan proses secara terpisah untuk setiap site (GBC & DMLZ), lalu upload hasilnya ke sistem ini</li>
+                    `,
                     
                     // Sheet info
                     'sheet-info-title': 'Format File Excel:',
@@ -317,7 +717,13 @@
                     
                     // Common translations
                     'file-label': 'Pilih File Excel (.xlsx atau .xls):',
-                    'submit-btn': 'Proses File'
+                    'submit-btn': 'Proses File',
+                    'loading-text': 'Memproses file, harap tunggu...',
+                    'processing-text': 'Memproses...',
+                    'complete-text': 'File berhasil diproses!',
+                    'close-btn': 'Tutup',
+                    'loading-subtext': 'Proses dapat memakan waktu beberapa saat. Harap jangan tutup browser.',
+                    'error-text': 'Terjadi kesalahan saat memproses file. Silakan coba lagi.'
                 }
             };
 
@@ -328,6 +734,11 @@
             
             document.getElementById('instructions-title').innerText = translations[lang]['instructions-title'];
             document.getElementById('instructions-text').innerText = translations[lang]['instructions-text'];
+            
+            // Update instruction steps
+            if (document.getElementById('instructions-steps')) {
+                document.getElementById('instructions-steps').innerHTML = translations[lang]['instructions-steps'];
+            }
             
             document.getElementById('sheet-info-title').innerText = translations[lang]['sheet-info-title'];
             document.getElementById('sheet-info-text').innerText = translations[lang]['sheet-info-text'];
@@ -341,6 +752,21 @@
             
             document.getElementById('file-label').innerText = translations[lang]['file-label'];
             document.getElementById('submit-btn').innerText = translations[lang]['submit-btn'];
+            document.getElementById('loading-text').innerText = translations[lang]['loading-text'];
+            
+            if (document.getElementById('processing-text')) {
+                document.getElementById('processing-text').innerText = translations[lang]['processing-text'];
+            }
+            
+            // Update loading subtext
+            if (document.getElementById('loading-subtext')) {
+                document.getElementById('loading-subtext').innerText = translations[lang]['loading-subtext'];
+            }
+            
+            // Update close button if visible
+            if (document.getElementById('closeButton')) {
+                document.getElementById('closeButton').innerText = translations[lang]['close-btn'];
+            }
 
             // Update active language
             document.getElementById('lang-en').style.fontWeight = lang === 'en' ? 'bold' : 'normal';
