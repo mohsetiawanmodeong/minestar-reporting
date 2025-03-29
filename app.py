@@ -36,7 +36,7 @@ def clean_delay_data(df):
     
     # Handle date/time columns
     if 'Start Date' in df.columns and 'Finish Date' in df.columns:
-        # Helper function to parse WIT date format
+        # Helper function to parse WIT date format to datetime object
         def parse_wit_date(date_str):
             if pd.isna(date_str):
                 return None
@@ -55,9 +55,20 @@ def clean_delay_data(df):
                 }
                 month_num = month_map.get(month, 1)
                 
-                # Format as 'MM/DD/YYYY H:MM:SS'
-                return f"{month_num}/{day}/{year} {time}"
-            return None
+                # Format date string for parsing
+                date_str = f"{year}-{month_num:02d}-{int(day):02d} {time}"
+                
+                # Return as datetime object
+                try:
+                    return pd.to_datetime(date_str)
+                except:
+                    return None
+            
+            # If pattern doesn't match, try direct pandas conversion
+            try:
+                return pd.to_datetime(date_str)
+            except:
+                return None
         
         # Apply the parsing function
         cleaned_df['Start'] = df['Start Date'].apply(parse_wit_date)
@@ -159,25 +170,21 @@ def clean_cycle_data(df):
                     }
                     month_num = month_map.get(month, 1)
                     
-                    # Format as 'MM/DD/YYYY H:MM:SS'
-                    formatted_date = f"{month_num}/{day}/{year} {time}"
+                    # Format date string for parsing
+                    date_str = f"{year}-{month_num:02d}-{int(day):02d} {time}"
                     
-                    # Parse for duration calculation
-                    try:
-                        dt_obj = pd.to_datetime(formatted_date)
-                        start_times.append(dt_obj)
-                        return formatted_date
-                    except:
-                        start_times.append(None)
-                        return formatted_date
+                    # Return as datetime object
+                    dt_obj = pd.to_datetime(date_str)
+                    start_times.append(dt_obj)
+                    return dt_obj
                 
                 # If pattern doesn't match, try using pandas
                 date = pd.to_datetime(date_str)
                 start_times.append(date)
-                return date.strftime('%m/%d/%Y %H:%M:%S')
+                return date
             except:
                 start_times.append(None)
-                return date_str
+                return None
             
         cleaned_df['Start'] = df['Start time'].apply(format_date)
     elif 'Start' in df.columns:  # Fallback for different column name
@@ -186,10 +193,10 @@ def clean_cycle_data(df):
                 try:
                     date = pd.to_datetime(x)
                     start_times.append(date)
-                    return date.strftime('%m/%d/%Y %H:%M:%S')
+                    return date
                 except:
                     start_times.append(None)
-                    return x
+                    return None
             else:
                 start_times.append(None)
                 return None
@@ -220,25 +227,21 @@ def clean_cycle_data(df):
                     }
                     month_num = month_map.get(month, 1)
                     
-                    # Format as 'MM/DD/YYYY H:MM:SS'
-                    formatted_date = f"{month_num}/{day}/{year} {time}"
+                    # Format date string for parsing
+                    date_str = f"{year}-{month_num:02d}-{int(day):02d} {time}"
                     
-                    # Parse for duration calculation
-                    try:
-                        dt_obj = pd.to_datetime(formatted_date)
-                        finish_times.append(dt_obj)
-                        return formatted_date
-                    except:
-                        finish_times.append(None)
-                        return formatted_date
+                    # Return as datetime object
+                    dt_obj = pd.to_datetime(date_str)
+                    finish_times.append(dt_obj)
+                    return dt_obj
                 
                 # If pattern doesn't match, try using pandas
                 date = pd.to_datetime(date_str)
                 finish_times.append(date)
-                return date.strftime('%m/%d/%Y %H:%M:%S')
+                return date
             except:
                 finish_times.append(None)
-                return date_str
+                return None
             
         cleaned_df['Finish'] = df['Finish Time'].apply(format_date)
     elif 'Finish' in df.columns:  # Fallback for different column name
@@ -247,10 +250,10 @@ def clean_cycle_data(df):
                 try:
                     date = pd.to_datetime(x)
                     finish_times.append(date)
-                    return date.strftime('%m/%d/%Y %H:%M:%S')
+                    return date
                 except:
                     finish_times.append(None)
-                    return x
+                    return None
             else:
                 finish_times.append(None)
                 return None
@@ -395,8 +398,21 @@ def index():
                 
                 # Create a new Excel file with the cleaned data
                 output = io.BytesIO()
-                with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                with pd.ExcelWriter(output, engine='openpyxl', datetime_format='mm/dd/yyyy hh:mm:ss') as writer:
                     for sheet_name, df in cleaned_data.items():
+                        # Convert string dates to datetime objects for Excel compatibility
+                        if 'Start' in df.columns:
+                            try:
+                                df['Start'] = pd.to_datetime(df['Start'])
+                            except:
+                                pass
+                                
+                        if 'Finish' in df.columns:
+                            try:
+                                df['Finish'] = pd.to_datetime(df['Finish'])
+                            except:
+                                pass
+                        
                         df.to_excel(writer, sheet_name=sheet_name, index=False)
                 
                 output.seek(0)
