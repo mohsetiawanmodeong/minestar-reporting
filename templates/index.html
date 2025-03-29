@@ -101,6 +101,37 @@
             display: flex;
             gap: 10px;
         }
+        .file-input-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .file-input-container input[type="file"] {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .file-input-container .btn {
+            min-width: 120px;
+            text-align: center;
+        }
+        /* Custom file input styling to match button sizes */
+        .custom-file-input {
+            position: relative;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .custom-file-input input[type="file"] {
+            min-width: 120px;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .custom-file-label:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
@@ -120,7 +151,7 @@
         
         <div class="instructions">
             <h3 id="instructions-title">Petunjuk Penggunaan:</h3>
-            <p id="instructions-text">Unggah file Excel yang berisi data delay dan cycle dalam sheet terpisah. Aplikasi akan secara otomatis mendeteksi tipe data berdasarkan format kolom dan membersihkan semua sheet yang valid.</p>
+            <p id="instructions-text">Unggah file Excel yang berisi data delay dan cycle dalam sheet terpisah. Aplikasi akan secara otomatis mendeteksi tipe data berdasarkan format kolom dan membersihkan semua sheet yang valid. <br> <b>Tarik data khusus LHD saja.</b></p>
             
             <div class="sheet-info">
                 <h3 id="sheet-info-title">Format File Excel:</h3>
@@ -165,10 +196,13 @@
         <form method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="file" id="file-label">Pilih File Excel (.xlsx atau .xls):</label>
-                <input type="file" id="file" name="file" accept=".xlsx, .xls" required>
+                <div class="file-input-container">
+                    <div class="custom-file-input">
+                        <input type="file" id="file" name="file" accept=".xlsx, .xls" required>
+                    </div>
+                    <button type="submit" class="btn" id="submit-btn">Proses File</button>
+                </div>
             </div>
-            
-            <button type="submit" class="btn" id="submit-btn">Proses File</button>
             
             {% if error %}
             <div class="error">
@@ -193,7 +227,7 @@
                     
                     // Main instructions
                     'instructions-title': 'Instructions:',
-                    'instructions-text': 'Upload an Excel file containing delay and cycle data in separate sheets. The application will automatically detect the data type based on column format and clean all valid sheets.',
+                    'instructions-text': 'Upload an Excel file containing delay and cycle data in separate sheets. The application will automatically detect the data type based on column format and clean all valid sheets. Pull LHD data only.',
                     
                     // Sheet info
                     'sheet-info-title': 'Excel File Format:',
@@ -243,7 +277,7 @@
                     
                     // Main instructions
                     'instructions-title': 'Petunjuk Penggunaan:',
-                    'instructions-text': 'Unggah file Excel yang berisi data delay dan cycle dalam sheet terpisah. Aplikasi akan secara otomatis mendeteksi tipe data berdasarkan format kolom dan membersihkan semua sheet yang valid.',
+                    'instructions-text': 'Unggah file Excel yang berisi data delay dan cycle dalam sheet terpisah. Aplikasi akan secara otomatis mendeteksi tipe data berdasarkan format kolom dan membersihkan semua sheet yang valid. <br> <b>Tarik data khusus LHD saja.</b>',
                     
                     // Sheet info
                     'sheet-info-title': 'Format File Excel:',
