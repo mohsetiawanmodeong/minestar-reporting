@@ -140,13 +140,51 @@ def clean_delay_data(df):
     if 'Delay Type' in df.columns:
         cleaned_df['Delay Type'] = df['Delay Type']
     
-    # Determine category based on delay type
-    if 'Delay Type' in df.columns:
+    # Copy or determine category 
+    if 'Category' in df.columns:
+        # Direct mapping to standardize category names
+        def standardize_category(category):
+            if pd.isna(category):
+                return None
+                
+            category = str(category).strip().upper()
+            
+            # Map to the exact format from the dropdown in the image
+            if category in ['DELAY']:
+                return 'DELAY'
+            elif category in ['EXTENDED LOSS', 'EXTENDED']:
+                return 'EXTENDED LOSS'
+            elif category in ['PLANNED DOWN']:
+                return 'PLANNED DOWN'
+            elif category in ['STANDBY']:
+                return 'STANDBY'
+            elif category in ['UNPLANNED DOWN']:
+                return 'UNPLANNED DOWN'
+            
+            return category
+            
+        cleaned_df['Category'] = df['Category'].apply(standardize_category)
+    # Determine category based on delay type if Category column doesn't exist
+    elif 'Delay Type' in df.columns:
         def get_category(delay_type):
             if pd.isna(delay_type):
                 return None
                 
-            delay_type = str(delay_type)
+            delay_type = str(delay_type).strip().upper()
+            
+            # Check for exact matches first
+            if delay_type == 'DELAY':
+                return 'DELAY'
+            elif delay_type == 'EXTENDED LOSS':
+                return 'EXTENDED LOSS'
+            elif delay_type == 'PLANNED DOWN':
+                return 'PLANNED DOWN'
+            elif delay_type == 'STANDBY':
+                return 'STANDBY'
+            elif delay_type == 'UNPLANNED DOWN':
+                return 'UNPLANNED DOWN'
+            
+            # Then check for prefix patterns
             if delay_type.startswith('D-'):
                 return 'DELAY'
             elif delay_type.startswith('S-'):
@@ -160,8 +198,6 @@ def clean_delay_data(df):
             return None
         
         cleaned_df['Category'] = df['Delay Type'].apply(get_category)
-    elif 'Category' in df.columns:
-        cleaned_df['Category'] = df['Category']
     
     return cleaned_df
 
@@ -379,10 +415,10 @@ def create_performance_sheet(delay_df, cycle_df):
     
     units = sorted(list(units))
     
-    # Create DataFrame for Performance sheet
+    # Create DataFrame for Performance sheet with exact column names as in the image
     performance_df = pd.DataFrame(columns=[
-        'Unit', 'Operating hrs', 'Delay', 'Extended', 'Planned Down', 
-        'Standby', 'Unplanned Down', 'Grand Total', 'PA'
+        'Unit', 'Operating hrs', 'DELAY', 'EXTENDED LOSS', 'PLANNED DOWN', 
+        'STANDBY', 'UNPLANNED DOWN', 'Grand Total', 'PA'
     ])
     
     # Add units to the DataFrame
@@ -400,11 +436,10 @@ def create_performance_sheet(delay_df, cycle_df):
     
     performance_df['Operating hrs'] = performance_df['Unit'].map(operating_hrs).fillna(0.0)
     
-    # Calculate delay categories for each unit
-    categories = ['DELAY', 'EXTENDED', 'PLANNED DOWN', 'STANDBY', 'UNPLANNED DOWN']
-    category_columns = ['Delay', 'Extended', 'Planned Down', 'Standby', 'Unplanned Down']
+    # Calculate delay categories for each unit using exact category names
+    categories = ['DELAY', 'EXTENDED LOSS', 'PLANNED DOWN', 'STANDBY', 'UNPLANNED DOWN']
     
-    for category, column in zip(categories, category_columns):
+    for category in categories:
         category_values = {}
         for unit in units:
             if 'Unit' in delay_df.columns and 'Category' in delay_df.columns and 'Dur' in delay_df.columns:
@@ -415,19 +450,19 @@ def create_performance_sheet(delay_df, cycle_df):
             else:
                 category_values[unit] = 0.0
         
-        performance_df[column] = performance_df['Unit'].map(category_values).fillna(0.0)
+        performance_df[category] = performance_df['Unit'].map(category_values).fillna(0.0)
     
     # Calculate Grand Total (sum of Operating hrs and all delay categories)
-    performance_df['Grand Total'] = performance_df['Operating hrs'] + performance_df[category_columns].sum(axis=1)
+    performance_df['Grand Total'] = performance_df['Operating hrs'] + performance_df[categories].sum(axis=1)
     
     # Ensure Grand Total is 24 hrs for each unit
     performance_df['Grand Total'] = 24.0
     
     # Calculate PA (Performance Availability) using the formula: PA = ((H3-D3)-SUM(E3,G3))/(H3-D3) * 100
-    # Where H3 is Grand Total, D3 is Delay, and E3:G3 are the remaining delay categories
-    performance_df['PA'] = ((performance_df['Grand Total'] - performance_df['Delay']) - 
-                           performance_df[['Extended', 'Planned Down', 'Standby', 'Unplanned Down']].sum(axis=1)) / \
-                          (performance_df['Grand Total'] - performance_df['Delay']) * 100
+    # Where H3 is Grand Total, D3 is DELAY, and E3:G3 are the remaining delay categories
+    performance_df['PA'] = ((performance_df['Grand Total'] - performance_df['DELAY']) - 
+                           performance_df[['EXTENDED LOSS', 'PLANNED DOWN', 'STANDBY', 'UNPLANNED DOWN']].sum(axis=1)) / \
+                          (performance_df['Grand Total'] - performance_df['DELAY']) * 100
     
     # Round PA to 1 decimal place
     performance_df['PA'] = performance_df['PA'].round(1)
@@ -436,11 +471,11 @@ def create_performance_sheet(delay_df, cycle_df):
     grand_total_row = pd.DataFrame({
         'Unit': ['Grand Total'],
         'Operating hrs': [performance_df['Operating hrs'].sum()],
-        'Delay': [performance_df['Delay'].sum()],
-        'Extended': [performance_df['Extended'].sum()],
-        'Planned Down': [performance_df['Planned Down'].sum()],
-        'Standby': [performance_df['Standby'].sum()],
-        'Unplanned Down': [performance_df['Unplanned Down'].sum()],
+        'DELAY': [performance_df['DELAY'].sum()],
+        'EXTENDED LOSS': [performance_df['EXTENDED LOSS'].sum()],
+        'PLANNED DOWN': [performance_df['PLANNED DOWN'].sum()],
+        'STANDBY': [performance_df['STANDBY'].sum()],
+        'UNPLANNED DOWN': [performance_df['UNPLANNED DOWN'].sum()],
         'Grand Total': [performance_df['Grand Total'].mean()],
         'PA': [performance_df['PA'].mean()]
     })
@@ -488,6 +523,18 @@ def process_excel_file(file):
             log_message(f"Membaca sheet: {sheet_name}")
             df = pd.read_excel(file, sheet_name=sheet_name)
             
+            # Normalize Category column for better compatibility
+            if 'Category' in df.columns:
+                log_message(f"Standarisasi kolom Category pada sheet {sheet_name}")
+                # Normalize category values
+                df['Category'] = df['Category'].apply(lambda x: 
+                    'DELAY' if pd.notna(x) and str(x).strip().upper() == 'DELAY'
+                    else 'EXTENDED LOSS' if pd.notna(x) and str(x).strip().upper() in ['EXTENDED LOSS', 'EXTENDED']
+                    else 'PLANNED DOWN' if pd.notna(x) and str(x).strip().upper() == 'PLANNED DOWN'
+                    else 'STANDBY' if pd.notna(x) and str(x).strip().upper() == 'STANDBY'
+                    else 'UNPLANNED DOWN' if pd.notna(x) and str(x).strip().upper() == 'UNPLANNED DOWN'
+                    else x)
+                
             log_message(f"Kolom pada sheet {sheet_name}: {df.columns.tolist()}")
             
             # Determine data type based on sheet name or column structure
@@ -632,7 +679,7 @@ def index():
                                     
                         elif sheet_name.lower() == 'performance':
                             # Format all numeric columns to 2 decimals
-                            numeric_cols = ['Operating hrs', 'Delay', 'Extended', 'Planned Down', 'Standby', 'Unplanned Down']
+                            numeric_cols = ['Operating hrs', 'DELAY', 'EXTENDED LOSS', 'PLANNED DOWN', 'STANDBY', 'UNPLANNED DOWN']
                             for col_name in numeric_cols:
                                 if col_name in df.columns:
                                     col_idx = df.columns.get_loc(col_name) + 1
@@ -641,6 +688,17 @@ def index():
                                     for row in range(2, max_row + 1):
                                         cell = worksheet[f"{col_letter}{row}"]
                                         cell.number_format = '0.00'
+                            
+                            # Apply color formatting to category headers to match filter colors
+                            if len(df.columns) > 0:
+                                # Get header cells
+                                for col_name in ['DELAY', 'EXTENDED LOSS', 'PLANNED DOWN', 'STANDBY', 'UNPLANNED DOWN']:
+                                    if col_name in df.columns:
+                                        col_idx = df.columns.get_loc(col_name) + 1
+                                        header_cell = worksheet[f"{get_column_letter(col_idx)}1"]
+                                        
+                                        # Apply bold formatting
+                                        header_cell.font = openpyxl.styles.Font(bold=True)
                             
                             # Format Grand Total column to 2 decimals
                             if 'Grand Total' in df.columns:
