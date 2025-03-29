@@ -42,6 +42,13 @@
         .btn:hover {
             background-color: #2980b9;
         }
+        .btn-download {
+            background-color: #27ae60;
+            margin-right: 10px;
+        }
+        .btn-download:hover {
+            background-color: #219d54;
+        }
         .error {
             color: #e74c3c;
             margin-top: 10px;
@@ -65,6 +72,35 @@
             font-size: 12px;
             color: #7f8c8d;
         }
+        .sheet-info {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #e8f8f5;
+            border-radius: 5px;
+            border-left: 4px solid #2ecc71;
+        }
+        .sheet-info h3 {
+            margin-top: 0;
+            color: #27ae60;
+        }
+        .template-section {
+            margin-bottom: 20px;
+            background-color: #f8f4e5;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #f39c12;
+        }
+        .template-section h3 {
+            margin-top: 0;
+            color: #d35400;
+        }
+        .template-section p {
+            margin-bottom: 15px;
+        }
+        .buttons-container {
+            display: flex;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -76,23 +112,54 @@
     <h1>MINESTAR - Excel Data Cleaner</h1>
     
     <div class="container">
+        <div class="template-section">
+            <h3 id="template-title">Format Template Excel</h3>
+            <p id="template-text">Unduh file template Excel yang berisi format standar untuk data Delay dan Cycle. Gunakan template ini untuk memastikan data Anda mudah diproses.</p>
+            <a href="/download-template" class="btn btn-download" id="download-btn">Unduh Template</a>
+        </div>
+        
         <div class="instructions">
-            <h3 id="instructions-title">Petunjuk:</h3>
-            <p id="instructions-text">Unggah file Excel data mentah Anda untuk diproses sesuai dengan aturan berikut:</p>
-            <ul id="instructions-list">
-                <li>Kolom 'Machine' akan diubah menjadi 'Unit'</li>
-                <li>Tanggal Mulai dan Tanggal Selesai akan diformat ulang menjadi MM/DD/YYYY H:MM:SS</li>
-                <li>Durasi akan dikonversi ke jam dengan 2 angka desimal</li>
-                <li>Kategori akan ditetapkan berdasarkan awalan Delay Type:
-                    <ul>
-                        <li>D- → DELAY</li>
-                        <li>S- → STANDBY</li>
-                        <li>UX- → UNPLANNED DOWN</li>
-                        <li>X- → PLANNED DOWN</li>
-                        <li>XX- → EXTENDED LOSS</li>
-                    </ul>
-                </li>
-            </ul>
+            <h3 id="instructions-title">Petunjuk Penggunaan:</h3>
+            <p id="instructions-text">Unggah file Excel yang berisi data delay dan cycle dalam sheet terpisah. Aplikasi akan secara otomatis mendeteksi tipe data berdasarkan format kolom dan membersihkan semua sheet yang valid.</p>
+            
+            <div class="sheet-info">
+                <h3 id="sheet-info-title">Format File Excel:</h3>
+                <p id="sheet-info-text">File Excel Anda dapat berisi beberapa sheet dengan format berikut:</p>
+                <ul id="sheet-info-list">
+                    <li>Setiap sheet akan diproses secara terpisah</li>
+                    <li>Sheet akan diidentifikasi sebagai data delay jika memiliki kolom 'Unit' (atau 'Machine'), 'Start Date', 'Finish Date', dan 'Duration'</li>
+                    <li>Sheet akan diidentifikasi sebagai data cycle jika memiliki kolom 'Unit', 'Start', 'Finish', dan 'Dur'</li>
+                    <li>Sheet yang tidak memenuhi salah satu format di atas akan dilewati</li>
+                </ul>
+            </div>
+            
+            <div id="delay-info" class="sheet-info">
+                <h3 id="delay-info-title">Aturan Pembersihan Data Delay:</h3>
+                <ul id="delay-info-list">
+                    <li>Kolom 'Unit' (atau 'Machine' jika digunakan) akan digunakan</li>
+                    <li>Tanggal Mulai dan Tanggal Selesai akan diformat ulang menjadi MM/DD/YYYY H:MM:SS</li>
+                    <li>Durasi akan dikonversi ke jam dengan 2 angka desimal</li>
+                    <li>Kategori akan ditetapkan berdasarkan awalan Delay Type:
+                        <ul>
+                            <li>D- → DELAY</li>
+                            <li>S- → STANDBY</li>
+                            <li>UX- → UNPLANNED DOWN</li>
+                            <li>X- → PLANNED DOWN</li>
+                            <li>XX- → EXTENDED LOSS</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="cycle-info" class="sheet-info">
+                <h3 id="cycle-info-title">Aturan Pembersihan Data Cycle:</h3>
+                <ul id="cycle-info-list">
+                    <li>Kolom 'Unit' akan tetap dipertahankan</li>
+                    <li>Tanggal Mulai dan Tanggal Selesai akan diformat ulang menjadi MM/DD/YYYY H:MM:SS</li>
+                    <li>Durasi akan dibulatkan menjadi 2 angka desimal</li>
+                    <li>Kolom Desc, Delay Type, dan Category akan dipertahankan</li>
+                </ul>
+            </div>
         </div>
         
         <form method="POST" enctype="multipart/form-data">
@@ -119,10 +186,29 @@
         function switchLanguage(lang) {
             const translations = {
                 'en': {
+                    // Template section
+                    'template-title': 'Excel Template Format',
+                    'template-text': 'Download the Excel template file containing standard formats for Delay and Cycle data. Use this template to ensure your data is easily processed.',
+                    'download-btn': 'Download Template',
+                    
+                    // Main instructions
                     'instructions-title': 'Instructions:',
-                    'instructions-text': 'Upload your raw Excel data file to be processed according to the following rules:',
-                    'instructions-list': `
-                        <li>Machine column will be mapped to Unit</li>
+                    'instructions-text': 'Upload an Excel file containing delay and cycle data in separate sheets. The application will automatically detect the data type based on column format and clean all valid sheets.',
+                    
+                    // Sheet info
+                    'sheet-info-title': 'Excel File Format:',
+                    'sheet-info-text': 'Your Excel file can contain multiple sheets with the following formats:',
+                    'sheet-info-list': `
+                        <li>Each sheet will be processed separately</li>
+                        <li>Sheets will be identified as delay data if they have 'Unit' (or 'Machine'), 'Start Date', 'Finish Date', and 'Duration' columns</li>
+                        <li>Sheets will be identified as cycle data if they have 'Unit', 'Start', 'Finish', and 'Dur' columns</li>
+                        <li>Sheets that don't meet either format will be skipped</li>
+                    `,
+                    
+                    // Delay data
+                    'delay-info-title': 'Delay Data Cleaning Rules:',
+                    'delay-info-list': `
+                        <li>'Unit' column (or 'Machine' if used) will be used</li>
                         <li>Start Date and Finish Date will be reformatted to MM/DD/YYYY H:MM:SS</li>
                         <li>Duration will be converted to hours with 2 decimal places</li>
                         <li>Categories will be set based on Delay Type prefixes:
@@ -135,14 +221,44 @@
                             </ul>
                         </li>
                     `,
+                    
+                    // Cycle data
+                    'cycle-info-title': 'Cycle Data Cleaning Rules:',
+                    'cycle-info-list': `
+                        <li>Unit column will be preserved</li>
+                        <li>Start and Finish dates will be reformatted to MM/DD/YYYY H:MM:SS</li>
+                        <li>Duration will be rounded to 2 decimal places</li>
+                        <li>Desc, Delay Type, and Category columns will be preserved</li>
+                    `,
+                    
+                    // Common translations
                     'file-label': 'Select Excel File (.xlsx or .xls):',
                     'submit-btn': 'Process File'
                 },
                 'id': {
-                    'instructions-title': 'Petunjuk:',
-                    'instructions-text': 'Unggah file Excel data mentah Anda untuk diproses sesuai dengan aturan berikut:',
-                    'instructions-list': `
-                        <li>Kolom 'Machine' akan diubah menjadi 'Unit'</li>
+                    // Template section
+                    'template-title': 'Format Template Excel',
+                    'template-text': 'Unduh file template Excel yang berisi format standar untuk data Delay dan Cycle. Gunakan template ini untuk memastikan data Anda mudah diproses.',
+                    'download-btn': 'Unduh Template',
+                    
+                    // Main instructions
+                    'instructions-title': 'Petunjuk Penggunaan:',
+                    'instructions-text': 'Unggah file Excel yang berisi data delay dan cycle dalam sheet terpisah. Aplikasi akan secara otomatis mendeteksi tipe data berdasarkan format kolom dan membersihkan semua sheet yang valid.',
+                    
+                    // Sheet info
+                    'sheet-info-title': 'Format File Excel:',
+                    'sheet-info-text': 'File Excel Anda dapat berisi beberapa sheet dengan format berikut:',
+                    'sheet-info-list': `
+                        <li>Setiap sheet akan diproses secara terpisah</li>
+                        <li>Sheet akan diidentifikasi sebagai data delay jika memiliki kolom 'Unit' (atau 'Machine'), 'Start Date', 'Finish Date', dan 'Duration'</li>
+                        <li>Sheet akan diidentifikasi sebagai data cycle jika memiliki kolom 'Unit', 'Start', 'Finish', dan 'Dur'</li>
+                        <li>Sheet yang tidak memenuhi salah satu format di atas akan dilewati</li>
+                    `,
+                    
+                    // Delay data
+                    'delay-info-title': 'Aturan Pembersihan Data Delay:',
+                    'delay-info-list': `
+                        <li>Kolom 'Unit' (atau 'Machine' jika digunakan) akan digunakan</li>
                         <li>Tanggal Mulai dan Tanggal Selesai akan diformat ulang menjadi MM/DD/YYYY H:MM:SS</li>
                         <li>Durasi akan dikonversi ke jam dengan 2 angka desimal</li>
                         <li>Kategori akan ditetapkan berdasarkan awalan Delay Type:
@@ -155,15 +271,40 @@
                             </ul>
                         </li>
                     `,
+                    
+                    // Cycle data
+                    'cycle-info-title': 'Aturan Pembersihan Data Cycle:',
+                    'cycle-info-list': `
+                        <li>Kolom 'Unit' akan tetap dipertahankan</li>
+                        <li>Tanggal Mulai dan Tanggal Selesai akan diformat ulang menjadi MM/DD/YYYY H:MM:SS</li>
+                        <li>Durasi akan dibulatkan menjadi 2 angka desimal</li>
+                        <li>Kolom Desc, Delay Type, dan Category akan dipertahankan</li>
+                    `,
+                    
+                    // Common translations
                     'file-label': 'Pilih File Excel (.xlsx atau .xls):',
                     'submit-btn': 'Proses File'
                 }
             };
 
             // Update text elements
+            document.getElementById('template-title').innerText = translations[lang]['template-title'];
+            document.getElementById('template-text').innerText = translations[lang]['template-text'];
+            document.getElementById('download-btn').innerText = translations[lang]['download-btn'];
+            
             document.getElementById('instructions-title').innerText = translations[lang]['instructions-title'];
             document.getElementById('instructions-text').innerText = translations[lang]['instructions-text'];
-            document.getElementById('instructions-list').innerHTML = translations[lang]['instructions-list'];
+            
+            document.getElementById('sheet-info-title').innerText = translations[lang]['sheet-info-title'];
+            document.getElementById('sheet-info-text').innerText = translations[lang]['sheet-info-text'];
+            document.getElementById('sheet-info-list').innerHTML = translations[lang]['sheet-info-list'];
+            
+            document.getElementById('delay-info-title').innerText = translations[lang]['delay-info-title'];
+            document.getElementById('delay-info-list').innerHTML = translations[lang]['delay-info-list'];
+            
+            document.getElementById('cycle-info-title').innerText = translations[lang]['cycle-info-title'];
+            document.getElementById('cycle-info-list').innerHTML = translations[lang]['cycle-info-list'];
+            
             document.getElementById('file-label').innerText = translations[lang]['file-label'];
             document.getElementById('submit-btn').innerText = translations[lang]['submit-btn'];
 
