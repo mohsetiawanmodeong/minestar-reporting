@@ -418,7 +418,7 @@ def create_performance_sheet(delay_df, cycle_df):
     # Create DataFrame for Performance sheet with exact column names as in the image
     performance_df = pd.DataFrame(columns=[
         'Unit', 'Operating hrs', 'DELAY', 'EXTENDED LOSS', 'PLANNED DOWN', 
-        'STANDBY', 'UNPLANNED DOWN', 'Grand Total', 'PA'
+        'STANDBY', 'UNPLANNED DOWN', 'Grand Total', 'PA', 'UA'
     ])
     
     # Add units to the DataFrame
@@ -453,21 +453,26 @@ def create_performance_sheet(delay_df, cycle_df):
         performance_df[category] = performance_df['Unit'].map(category_values).fillna(0.0)
     
     # Calculate Grand Total (sum of Operating hrs and all delay categories)
-    performance_df['Grand Total'] = performance_df['Operating hrs'] + performance_df[categories].sum(axis=1)
+    performance_df['Grand Total'] = (performance_df['Operating hrs'] + 
+                                    performance_df['DELAY'] + 
+                                    performance_df['EXTENDED LOSS'] + 
+                                    performance_df['PLANNED DOWN'] + 
+                                    performance_df['STANDBY'] + 
+                                    performance_df['UNPLANNED DOWN'])
     
-    # Ensure Grand Total is 24 hrs for each unit
-    performance_df['Grand Total'] = 24.0
+    # Calculate PA using new formula: PA = (Operation hrs+DELAY+STANDBY) / (Grand Total-EXTENDED LOSS)*100
+    performance_df['PA'] = ((performance_df['Operating hrs'] + performance_df['DELAY'] + performance_df['STANDBY']) / 
+                          (performance_df['Grand Total'] - performance_df['EXTENDED LOSS'])) * 100
     
-    # Calculate PA (Performance Availability) using the formula: PA = ((H3-D3)-SUM(E3,G3))/(H3-D3) * 100
-    # Where H3 is Grand Total, D3 is DELAY, and E3:G3 are the remaining delay categories
-    performance_df['PA'] = ((performance_df['Grand Total'] - performance_df['DELAY']) - 
-                           performance_df[['EXTENDED LOSS', 'PLANNED DOWN', 'STANDBY', 'UNPLANNED DOWN']].sum(axis=1)) / \
-                          (performance_df['Grand Total'] - performance_df['DELAY']) * 100
+    # Calculate UA using formula: UA = (Operation hrs+DELAY) / (Operation hrs+DELAY+STANDBY)*100
+    performance_df['UA'] = ((performance_df['Operating hrs'] + performance_df['DELAY']) / 
+                          (performance_df['Operating hrs'] + performance_df['DELAY'] + performance_df['STANDBY'])) * 100
     
-    # Round PA to 1 decimal place
+    # Round PA and UA to 1 decimal place
     performance_df['PA'] = performance_df['PA'].round(1)
+    performance_df['UA'] = performance_df['UA'].round(1)
     
-    # Add Grand Total row at the bottom
+    # Add Grand Total row at the bottom with updated columns
     grand_total_row = pd.DataFrame({
         'Unit': ['Grand Total'],
         'Operating hrs': [performance_df['Operating hrs'].sum()],
@@ -477,7 +482,8 @@ def create_performance_sheet(delay_df, cycle_df):
         'STANDBY': [performance_df['STANDBY'].sum()],
         'UNPLANNED DOWN': [performance_df['UNPLANNED DOWN'].sum()],
         'Grand Total': [performance_df['Grand Total'].mean()],
-        'PA': [performance_df['PA'].mean()]
+        'PA': [performance_df['PA'].mean()],
+        'UA': [performance_df['UA'].mean()]
     })
     
     # Append the Grand Total row
@@ -709,14 +715,15 @@ def index():
                                     cell = worksheet[f"{gt_col_letter}{row}"]
                                     cell.number_format = '0.00'
                             
-                            # Format percentage column (PA)
-                            if 'PA' in df.columns:
-                                pa_col_idx = df.columns.get_loc('PA') + 1
-                                pa_col_letter = get_column_letter(pa_col_idx)
-                                
-                                for row in range(2, max_row + 1):
-                                    cell = worksheet[f"{pa_col_letter}{row}"]
-                                    cell.number_format = '0.0"%"'
+                            # Format percentage columns (PA and UA)
+                            for col_name in ['PA', 'UA']:
+                                if col_name in df.columns:
+                                    col_idx = df.columns.get_loc(col_name) + 1
+                                    col_letter = get_column_letter(col_idx)
+                                    
+                                    for row in range(2, max_row + 1):
+                                        cell = worksheet[f"{col_letter}{row}"]
+                                        cell.number_format = '0.0"%"'
                             
                             # Make the Grand Total row stand out
                             if len(df) > 0:

@@ -1,0 +1,36 @@
+[2025-03-31 15:26:33.295] Menerima file upload: Default Format Cycle & Delay.xlsx
+[2025-03-31 15:26:33.307] Memulai pemrosesan file: Default Format Cycle & Delay.xlsx
+[2025-03-31 15:26:34.727] Sheets dalam file: ['Delay', 'Cycle']
+[2025-03-31 15:26:34.729] Membaca sheet: Delay
+[2025-03-31 15:26:36.578] Kolom pada sheet Delay: ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Catetory', 'Description']
+[2025-03-31 15:26:36.584] Sheet Delay terdeteksi sebagai delay
+[2025-03-31 15:26:36.588] Membersihkan data delay pada sheet Delay
+[2025-03-31 15:26:45.785] Membaca sheet: Cycle
+[2025-03-31 15:26:52.512] Kolom pada sheet Cycle: ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-03-31 15:26:52.519] Sheet Cycle terdeteksi sebagai cycle
+[2025-03-31 15:26:52.527] Membersihkan data cycle pada sheet Cycle
+[2025-03-31 15:28:19.470] Membuat sheet Performance berdasarkan data Delay dan Cycle
+[2025-03-31 15:28:20.404] Hasil sheets yang diproses: ['Delay', 'Cycle', 'Performance']
+[2025-03-31 15:28:20.409] Membuat file Excel baru dengan data yang sudah dibersihkan
+[2025-03-31 15:28:20.415] Menulis sheet Delay ke file output
+[2025-03-31 15:28:20.932] Menulis sheet Cycle ke file output
+[2025-03-31 15:28:26.878] Menulis sheet Performance ke file output
+[2025-03-31 15:28:43.182] Pemrosesan file selesai: Default Format Cycle & Delay.xlsx
+[2025-03-31 15:35:37.435] Menerima file upload: Default Format Cycle & Delay.xlsx
+[2025-03-31 15:35:37.435] Memulai pemrosesan file: Default Format Cycle & Delay.xlsx
+[2025-03-31 15:35:38.094] Sheets dalam file: ['Delay', 'Cycle']
+[2025-03-31 15:35:38.094] Membaca sheet: Delay
+[2025-03-31 15:35:38.926] Kolom pada sheet Delay: ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Catetory', 'Description']
+[2025-03-31 15:35:38.928] Sheet Delay terdeteksi sebagai delay
+[2025-03-31 15:35:38.928] Membersihkan data delay pada sheet Delay
+[2025-03-31 15:35:43.168] Membaca sheet: Cycle
+[2025-03-31 15:35:46.889] Kolom pada sheet Cycle: ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-03-31 15:35:46.895] Sheet Cycle terdeteksi sebagai cycle
+[2025-03-31 15:35:46.895] Membersihkan data cycle pada sheet Cycle
+[2025-03-31 15:36:37.018] Membuat sheet Performance berdasarkan data Delay dan Cycle
+[2025-03-31 15:36:37.768] Hasil sheets yang diproses: ['Delay', 'Cycle', 'Performance']
+[2025-03-31 15:36:37.778] Membuat file Excel baru dengan data yang sudah dibersihkan
+[2025-03-31 15:36:37.786] Menulis sheet Delay ke file output
+[2025-03-31 15:36:38.086] Menulis sheet Cycle ke file output
+[2025-03-31 15:36:41.923] Menulis sheet Performance ke file output
+[2025-03-31 15:36:49.973] Pemrosesan file selesai: Default Format Cycle & Delay.xlsx
