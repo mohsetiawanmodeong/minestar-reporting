@@ -17,6 +17,6 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo Starting Excel Data Cleaner application...
-echo Once started, open a web browser and go to http://127.0.0.1:5000
+echo Once started, open a web browser and go to http://127.0.0.1:5050
 python app.py
 pause 
