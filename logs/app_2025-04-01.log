@@ -34,3 +34,39 @@
 [2025-04-01 12:03:15.841] Menulis sheet Cycle ke file output
 [2025-04-01 12:03:17.410] Menulis sheet Performance ke file output
 [2025-04-01 12:03:20.595] Pemrosesan file selesai: Default Format Cycle & Delay.xlsx
+[2025-04-01 12:25:07.545] Menerima file upload: Template Format Cycle & Delay 31 mar.xlsx
+[2025-04-01 12:25:07.545] Memulai pemrosesan file: Template Format Cycle & Delay 31 mar.xlsx
+[2025-04-01 12:25:07.668] Sheets dalam file: ['Delay', 'Cycle']
+[2025-04-01 12:25:07.670] Membaca sheet: Delay
+[2025-04-01 12:25:07.826] Kolom pada sheet Delay: ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Catetory', 'Description']
+[2025-04-01 12:25:07.826] Sheet Delay terdeteksi sebagai delay
+[2025-04-01 12:25:07.826] Membersihkan data delay pada sheet Delay
+[2025-04-01 12:25:08.190] Membaca sheet: Cycle
+[2025-04-01 12:25:08.875] Kolom pada sheet Cycle: ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-04-01 12:25:08.885] Sheet Cycle terdeteksi sebagai cycle
+[2025-04-01 12:25:08.885] Membersihkan data cycle pada sheet Cycle
+[2025-04-01 12:25:17.757] Membuat sheet Performance berdasarkan data Delay dan Cycle
+[2025-04-01 12:25:17.906] Hasil sheets yang diproses: ['Delay', 'Cycle', 'Performance']
+[2025-04-01 12:25:17.907] Membuat file Excel baru dengan data yang sudah dibersihkan
+[2025-04-01 12:25:17.907] Menulis sheet Delay ke file output
+[2025-04-01 12:25:17.940] Menulis sheet Cycle ke file output
+[2025-04-01 12:25:18.757] Menulis sheet Performance ke file output
+[2025-04-01 12:25:20.301] Pemrosesan file selesai: Template Format Cycle & Delay 31 mar.xlsx
+[2025-04-01 12:30:42.847] Menerima file upload: Template Format Cycle & Delay 31 mar.xlsx
+[2025-04-01 12:30:42.847] Memulai pemrosesan file: Template Format Cycle & Delay 31 mar.xlsx
+[2025-04-01 12:30:42.976] Sheets dalam file: ['Delay', 'Cycle']
+[2025-04-01 12:30:42.976] Membaca sheet: Delay
+[2025-04-01 12:30:43.160] Kolom pada sheet Delay: ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Catetory', 'Description']
+[2025-04-01 12:30:43.175] Sheet Delay terdeteksi sebagai delay
+[2025-04-01 12:30:43.175] Membersihkan data delay pada sheet Delay
+[2025-04-01 12:30:43.509] Membaca sheet: Cycle
+[2025-04-01 12:30:44.208] Kolom pada sheet Cycle: ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-04-01 12:30:44.208] Sheet Cycle terdeteksi sebagai cycle
+[2025-04-01 12:30:44.208] Membersihkan data cycle pada sheet Cycle
+[2025-04-01 12:30:52.435] Membuat sheet Performance berdasarkan data Delay dan Cycle
+[2025-04-01 12:30:52.566] Hasil sheets yang diproses: ['Delay', 'Cycle', 'Performance']
+[2025-04-01 12:30:52.566] Membuat file Excel baru dengan data yang sudah dibersihkan
+[2025-04-01 12:30:52.566] Menulis sheet Delay ke file output
+[2025-04-01 12:30:52.597] Menulis sheet Cycle ke file output
+[2025-04-01 12:30:53.357] Menulis sheet Performance ke file output
+[2025-04-01 12:30:54.794] Pemrosesan file selesai: Template Format Cycle & Delay 31 mar.xlsx
