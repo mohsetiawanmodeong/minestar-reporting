@@ -107,28 +107,81 @@ def clean_delay_data(df):
         # Apply the parsing function
         cleaned_df['Start'] = df['Start Date'].apply(parse_wit_date)
         cleaned_df['Finish'] = df['Finish Date'].apply(parse_wit_date)
-    
-    # Process duration (convert from seconds to hours with 2 decimal places)
-    if 'Duration' in df.columns:
-        def convert_duration(dur_str):
-            if pd.isna(dur_str):
-                return None
-                
-            # Handle format like "9,545 s"
-            match = re.match(r'([\d,]+\.?\d*)\s*s', str(dur_str))
-            if match:
-                # Remove commas and convert to float
-                seconds = float(match.group(1).replace(',', ''))
-                # Convert to hours
-                return round(seconds / 3600, 2)
-            
-            # Try direct numeric conversion if no unit
-            try:
-                return round(float(str(dur_str).replace(',', '')) / 3600, 2)
-            except:
-                return None
         
-        cleaned_df['Dur'] = df['Duration'].apply(convert_duration)
+        # Calculate duration as difference between finish and start times (in hours)
+        durations = []
+        for i in range(len(cleaned_df)):
+            start = cleaned_df['Start'].iloc[i]
+            finish = cleaned_df['Finish'].iloc[i]
+            
+            if pd.notna(start) and pd.notna(finish):
+                try:
+                    # Calculate duration in hours
+                    duration_seconds = (finish - start).total_seconds()
+                    duration_hours = duration_seconds / 3600
+                    durations.append(round(duration_hours, 2))
+                except:
+                    # If calculation fails, use original Duration if available
+                    if 'Duration' in df.columns and i < len(df['Duration']):
+                        try:
+                            # Handle format like "9,545 s"
+                            dur_str = df['Duration'].iloc[i]
+                            match = re.match(r'([\d,]+\.?\d*)\s*s', str(dur_str))
+                            if match:
+                                # Remove commas and convert to float
+                                seconds = float(match.group(1).replace(',', ''))
+                                # Convert to hours
+                                durations.append(round(seconds / 3600, 2))
+                            else:
+                                # Try direct numeric conversion if no unit
+                                durations.append(round(float(str(dur_str).replace(',', '')) / 3600, 2))
+                        except:
+                            durations.append(None)
+                    else:
+                        durations.append(None)
+            else:
+                # If either start or finish is missing, use original Duration if available
+                if 'Duration' in df.columns and i < len(df['Duration']):
+                    try:
+                        # Handle format like "9,545 s"
+                        dur_str = df['Duration'].iloc[i]
+                        match = re.match(r'([\d,]+\.?\d*)\s*s', str(dur_str))
+                        if match:
+                            # Remove commas and convert to float
+                            seconds = float(match.group(1).replace(',', ''))
+                            # Convert to hours
+                            durations.append(round(seconds / 3600, 2))
+                        else:
+                            # Try direct numeric conversion if no unit
+                            durations.append(round(float(str(dur_str).replace(',', '')) / 3600, 2))
+                    except:
+                        durations.append(None)
+                else:
+                    durations.append(None)
+                    
+        cleaned_df['Dur'] = durations
+    else:
+        # Process duration (convert from seconds to hours with 2 decimal places)
+        if 'Duration' in df.columns:
+            def convert_duration(dur_str):
+                if pd.isna(dur_str):
+                    return None
+                    
+                # Handle format like "9,545 s"
+                match = re.match(r'([\d,]+\.?\d*)\s*s', str(dur_str))
+                if match:
+                    # Remove commas and convert to float
+                    seconds = float(match.group(1).replace(',', ''))
+                    # Convert to hours
+                    return round(seconds / 3600, 2)
+                
+                # Try direct numeric conversion if no unit
+                try:
+                    return round(float(str(dur_str).replace(',', '')) / 3600, 2)
+                except:
+                    return None
+            
+            cleaned_df['Dur'] = df['Duration'].apply(convert_duration)
     
     # Copy description
     if 'Description' in df.columns:
@@ -184,16 +237,16 @@ def clean_delay_data(df):
             elif delay_type == 'UNPLANNED DOWN':
                 return 'UNPLANNED DOWN'
             
-            # Then check for prefix patterns
-            if delay_type.startswith('D-'):
+            # Then check for prefix patterns, handling both with and without spaces
+            if delay_type.startswith('D-') or delay_type.startswith('D -'):
                 return 'DELAY'
-            elif delay_type.startswith('S-'):
+            elif delay_type.startswith('S-') or delay_type.startswith('S -'):
                 return 'STANDBY'
-            elif delay_type.startswith('UX-'):
+            elif delay_type.startswith('UX-') or delay_type.startswith('UX -'):
                 return 'UNPLANNED DOWN'
-            elif delay_type.startswith('X-'):
+            elif delay_type.startswith('X-') or delay_type.startswith('X -'):
                 return 'PLANNED DOWN'
-            elif delay_type.startswith('XX-'):
+            elif delay_type.startswith('XX-') or delay_type.startswith('XX -'):
                 return 'EXTENDED LOSS'
             return None
         
