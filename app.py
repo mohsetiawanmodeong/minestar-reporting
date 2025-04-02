@@ -840,7 +840,7 @@ def download_template():
     """
     Endpoint untuk mengunduh file template
     """
-    template_path = os.path.join(os.getcwd(), 'Default Format Cycle & Delay.xlsx')
+    template_path = os.path.join(os.getcwd(), 'Template Format Cycle & Delay.xlsx')
     
     try:
         return send_file(
