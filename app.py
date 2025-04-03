@@ -846,7 +846,7 @@ def download_template():
         return send_file(
             template_path,
             as_attachment=True,
-            download_name='Template Cycle & Delay.xlsx',
+            download_name='Template Format Cycle & Delay.xlsx',
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
     except Exception as e:
