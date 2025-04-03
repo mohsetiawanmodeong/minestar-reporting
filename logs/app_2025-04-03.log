@@ -1,0 +1,55 @@
+[2025-04-03 09:54:55.478] Menerima file upload: Template Cycle & Delay (1).xlsx
+[2025-04-03 09:54:55.478] Memulai pemrosesan file: Template Cycle & Delay (1).xlsx
+[2025-04-03 09:54:55.516] Sheets dalam file: ['Delay', 'Cycle']
+[2025-04-03 09:54:55.516] Membaca sheet: Delay
+[2025-04-03 09:54:55.557] Standarisasi kolom Category pada sheet Delay
+[2025-04-03 09:54:55.559] Kolom pada sheet Delay: ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Category', 'Description']
+[2025-04-03 09:54:55.559] Sheet Delay terdeteksi sebagai delay
+[2025-04-03 09:54:55.559] Membersihkan data delay pada sheet Delay
+[2025-04-03 09:54:55.611] Membaca sheet: Cycle
+[2025-04-03 09:54:55.682] Kolom pada sheet Cycle: ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-04-03 09:54:55.687] Sheet Cycle terdeteksi sebagai cycle
+[2025-04-03 09:54:55.687] Membersihkan data cycle pada sheet Cycle
+[2025-04-03 09:54:56.103] Membuat sheet Performance berdasarkan data Delay dan Cycle
+[2025-04-03 09:54:56.118] Error saat memproses file: '<' not supported between instances of 'int' and 'str'
+[2025-04-03 09:54:56.122] Error processing file: Error processing file: '<' not supported between instances of 'int' and 'str'
+[2025-04-03 09:56:13.018] Menerima file upload: Template Cycle & Delay (1).xlsx
+[2025-04-03 09:56:13.020] Memulai pemrosesan file: Template Cycle & Delay (1).xlsx
+[2025-04-03 09:56:13.050] Sheets dalam file: ['Delay', 'Cycle']
+[2025-04-03 09:56:13.052] Membaca sheet: Delay
+[2025-04-03 09:56:13.091] Standarisasi kolom Category pada sheet Delay
+[2025-04-03 09:56:13.097] Kolom pada sheet Delay: ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Category', 'Description']
+[2025-04-03 09:56:13.100] Sheet Delay terdeteksi sebagai delay
+[2025-04-03 09:56:13.102] Membersihkan data delay pada sheet Delay
+[2025-04-03 09:56:13.209] Membaca sheet: Cycle
+[2025-04-03 09:56:13.283] Kolom pada sheet Cycle: ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-04-03 09:56:13.283] Sheet Cycle terdeteksi sebagai cycle
+[2025-04-03 09:56:13.287] Membersihkan data cycle pada sheet Cycle
+[2025-04-03 09:56:14.242] Membuat sheet Performance berdasarkan data Delay dan Cycle
+[2025-04-03 09:56:14.258] Error saat memproses file: '<' not supported between instances of 'int' and 'str'
+[2025-04-03 09:56:14.261] Error processing file: Error processing file: '<' not supported between instances of 'int' and 'str'
+[2025-04-03 10:12:15.130] Menerima file upload: Template Cycle & Delay (1).xlsx
+[2025-04-03 10:12:15.135] Memulai pemrosesan file: Template Cycle & Delay (1).xlsx
+[2025-04-03 10:12:15.182] Sheets dalam file: ['Delay', 'Cycle']
+[2025-04-03 10:12:15.184] Membaca sheet: Delay
+[2025-04-03 10:12:15.251] Kolom pada sheet Delay (sebelum normalisasi): ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Category', 'Description']
+[2025-04-03 10:12:15.255] Tipe data kolom pada sheet Delay: {'Unit': dtype('int64'), 'Start Date': dtype('O'), 'Finish Date': dtype('O'), 'Duration': dtype('O'), 'Delay Type': dtype('O'), 'Category': dtype('float64'), 'Description': dtype('O')}
+[2025-04-03 10:12:15.261] Standarisasi kolom Category pada sheet Delay
+[2025-04-03 10:12:15.261] Kolom pada sheet Delay (setelah normalisasi): ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Category', 'Description']
+[2025-04-03 10:12:15.261] Mengkonversi kolom Duration ke numerik pada sheet Delay
+[2025-04-03 10:12:15.271] Sheet Delay terdeteksi sebagai delay
+[2025-04-03 10:12:15.276] Membersihkan data delay pada sheet Delay
+[2025-04-03 10:12:15.407] Membaca sheet: Cycle
+[2025-04-03 10:12:15.493] Kolom pada sheet Cycle (sebelum normalisasi): ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-04-03 10:12:15.493] Tipe data kolom pada sheet Cycle: {'Unit': dtype('O'), 'Operator': dtype('O'), 'Start time': dtype('O'), 'Finish Time': dtype('O'), 'Dur': dtype('int64'), 'Source': dtype('O'), 'Destination': dtype('O')}
+[2025-04-03 10:12:15.493] Kolom pada sheet Cycle (setelah normalisasi): ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-04-03 10:12:15.502] Mengkonversi kolom Dur ke numerik pada sheet Cycle
+[2025-04-03 10:12:15.508] Sheet Cycle terdeteksi sebagai cycle
+[2025-04-03 10:12:15.508] Membersihkan data cycle pada sheet Cycle
+[2025-04-03 10:12:16.328] Membuat sheet Performance berdasarkan data Delay dan Cycle
+[2025-04-03 10:12:16.440] Hasil sheets yang diproses: ['Delay', 'Cycle', 'Performance']
+[2025-04-03 10:12:16.442] Membuat file Excel baru dengan data yang sudah dibersihkan
+[2025-04-03 10:12:16.448] Menulis sheet Delay ke file output
+[2025-04-03 10:12:16.557] Menulis sheet Cycle ke file output
+[2025-04-03 10:12:16.628] Menulis sheet Performance ke file output
+[2025-04-03 10:12:16.974] Pemrosesan file selesai: Template Cycle & Delay (1).xlsx
