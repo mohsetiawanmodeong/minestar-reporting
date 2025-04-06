@@ -1,0 +1,90 @@
+[2025-04-06 21:35:56.098] Menerima file upload: GBC_4 Apr 25.xlsx
+[2025-04-06 21:35:56.100] Memulai pemrosesan file: GBC_4 Apr 25.xlsx
+[2025-04-06 21:35:56.287] Sheets dalam file: ['Delay', 'Cycle']
+[2025-04-06 21:35:56.287] Membaca sheet: Delay
+[2025-04-06 21:35:56.508] Kolom pada sheet Delay: ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Catetory', 'Description']
+[2025-04-06 21:35:56.508] Sheet Delay terdeteksi sebagai delay
+[2025-04-06 21:35:56.509] Membersihkan data delay pada sheet Delay
+[2025-04-06 21:35:57.573] Membaca sheet: Cycle
+[2025-04-06 21:35:58.496] Kolom pada sheet Cycle: ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-04-06 21:35:58.501] Sheet Cycle terdeteksi sebagai cycle
+[2025-04-06 21:35:58.501] Membersihkan data cycle pada sheet Cycle
+[2025-04-06 21:36:06.674] Membuat sheet Performance berdasarkan data Delay dan Cycle
+[2025-04-06 21:36:06.863] Hasil sheets yang diproses: ['Delay', 'Cycle', 'Performance']
+[2025-04-06 21:36:06.866] Membuat file Excel baru dengan data yang sudah dibersihkan
+[2025-04-06 21:36:06.867] Menulis sheet Delay ke file output
+[2025-04-06 21:36:07.011] Menulis sheet Cycle ke file output
+[2025-04-06 21:36:07.721] Menulis sheet Performance ke file output
+[2025-04-06 21:36:09.356] Pemrosesan file selesai: GBC_4 Apr 25.xlsx
+[2025-04-06 21:41:27.972] Menerima file upload: GBC_4 Apr 25.xlsx
+[2025-04-06 21:41:27.973] Memulai pemrosesan file: GBC_4 Apr 25.xlsx
+[2025-04-06 21:41:28.144] Sheets dalam file: ['Delay', 'Cycle']
+[2025-04-06 21:41:28.144] Membaca sheet: Delay
+[2025-04-06 21:41:28.391] Kolom pada sheet Delay: ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Catetory', 'Description']
+[2025-04-06 21:41:28.391] Sheet Delay terdeteksi sebagai delay
+[2025-04-06 21:41:28.391] Membersihkan data delay pada sheet Delay
+[2025-04-06 21:41:29.386] Membaca sheet: Cycle
+[2025-04-06 21:41:30.255] Kolom pada sheet Cycle: ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-04-06 21:41:30.256] Sheet Cycle terdeteksi sebagai cycle
+[2025-04-06 21:41:30.257] Membersihkan data cycle pada sheet Cycle
+[2025-04-06 21:41:37.980] Membuat sheet Performance berdasarkan data Delay dan Cycle
+[2025-04-06 21:41:38.152] Hasil sheets yang diproses: ['Delay', 'Cycle', 'Performance']
+[2025-04-06 21:41:38.153] Membuat file Excel baru dengan data yang sudah dibersihkan
+[2025-04-06 21:41:38.155] Menulis sheet Delay ke file output
+[2025-04-06 21:41:38.259] Menulis sheet Cycle ke file output
+[2025-04-06 21:41:38.944] Menulis sheet Performance ke file output
+[2025-04-06 21:41:40.453] Pemrosesan file selesai: GBC_4 Apr 25.xlsx
+[2025-04-06 21:45:04.075] Menerima file upload: GBC_4 Apr 25.xlsx
+[2025-04-06 21:45:04.075] Memulai pemrosesan file: GBC_4 Apr 25.xlsx
+[2025-04-06 21:45:04.216] Sheets dalam file: ['Delay', 'Cycle']
+[2025-04-06 21:45:04.216] Membaca sheet: Delay
+[2025-04-06 21:45:04.421] Kolom pada sheet Delay: ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Catetory', 'Description']
+[2025-04-06 21:45:04.423] Sheet Delay terdeteksi sebagai delay
+[2025-04-06 21:45:04.423] Membersihkan data delay pada sheet Delay
+[2025-04-06 21:45:05.411] Membaca sheet: Cycle
+[2025-04-06 21:45:06.255] Kolom pada sheet Cycle: ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-04-06 21:45:06.255] Sheet Cycle terdeteksi sebagai cycle
+[2025-04-06 21:45:06.256] Membersihkan data cycle pada sheet Cycle
+[2025-04-06 21:45:14.288] Membuat sheet Performance berdasarkan data Delay dan Cycle
+[2025-04-06 21:45:14.456] Hasil sheets yang diproses: ['Delay', 'Cycle', 'Performance']
+[2025-04-06 21:45:14.458] Membuat file Excel baru dengan data yang sudah dibersihkan
+[2025-04-06 21:45:14.460] Menulis sheet Delay ke file output
+[2025-04-06 21:45:14.573] Menulis sheet Cycle ke file output
+[2025-04-06 21:45:15.322] Menulis sheet Performance ke file output
+[2025-04-06 21:45:16.903] Pemrosesan file selesai: GBC_4 Apr 25.xlsx
+[2025-04-06 21:55:01.867] Menerima file upload: GBC_4 Apr 25.xlsx
+[2025-04-06 21:55:01.868] Memulai pemrosesan file: GBC_4 Apr 25.xlsx
+[2025-04-06 21:55:01.990] Sheets dalam file: ['Delay', 'Cycle']
+[2025-04-06 21:55:01.991] Membaca sheet: Delay
+[2025-04-06 21:55:02.205] Kolom pada sheet Delay: ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Catetory', 'Description']
+[2025-04-06 21:55:02.206] Sheet Delay terdeteksi sebagai delay
+[2025-04-06 21:55:02.207] Membersihkan data delay pada sheet Delay
+[2025-04-06 21:55:03.200] Membaca sheet: Cycle
+[2025-04-06 21:55:04.019] Kolom pada sheet Cycle: ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-04-06 21:55:04.020] Sheet Cycle terdeteksi sebagai cycle
+[2025-04-06 21:55:04.021] Membersihkan data cycle pada sheet Cycle
+[2025-04-06 21:55:12.721] Membuat sheet Performance berdasarkan data Delay dan Cycle
+[2025-04-06 21:55:12.900] Hasil sheets yang diproses: ['Delay', 'Cycle', 'Performance']
+[2025-04-06 21:55:12.902] Membuat file Excel baru dengan data yang sudah dibersihkan
+[2025-04-06 21:55:12.904] Menulis sheet Delay ke file output
+[2025-04-06 21:55:13.010] Menulis sheet Cycle ke file output
+[2025-04-06 21:55:13.713] Menulis sheet Performance ke file output
+[2025-04-06 21:55:15.200] Pemrosesan file selesai: GBC_4 Apr 25.xlsx
+[2025-04-06 22:28:06.818] Menerima file upload: GBC_4 Apr 25.xlsx
+[2025-04-06 22:28:06.820] Memulai pemrosesan file: GBC_4 Apr 25.xlsx
+[2025-04-06 22:28:06.971] Sheets dalam file: ['Delay', 'Cycle']
+[2025-04-06 22:28:06.973] Membaca sheet: Delay
+[2025-04-06 22:28:07.213] Kolom pada sheet Delay: ['Unit', 'Start Date', 'Finish Date', 'Duration', 'Delay Type', 'Catetory', 'Description']
+[2025-04-06 22:28:07.214] Sheet Delay terdeteksi sebagai delay
+[2025-04-06 22:28:07.214] Membersihkan data delay pada sheet Delay
+[2025-04-06 22:28:08.248] Membaca sheet: Cycle
+[2025-04-06 22:28:09.132] Kolom pada sheet Cycle: ['Unit', 'Operator', 'Start time', 'Finish Time', 'Dur', 'Source', 'Destination']
+[2025-04-06 22:28:09.134] Sheet Cycle terdeteksi sebagai cycle
+[2025-04-06 22:28:09.134] Membersihkan data cycle pada sheet Cycle
+[2025-04-06 22:28:18.091] Membuat sheet Performance berdasarkan data Delay
+[2025-04-06 22:28:18.250] Hasil sheets yang diproses: ['Delay', 'Cycle', 'Performance']
+[2025-04-06 22:28:18.251] Membuat file Excel baru dengan data yang sudah dibersihkan
+[2025-04-06 22:28:18.252] Menulis sheet Delay ke file output
+[2025-04-06 22:28:18.361] Menulis sheet Cycle ke file output
+[2025-04-06 22:28:19.123] Menulis sheet Performance ke file output
+[2025-04-06 22:28:20.859] Pemrosesan file selesai: GBC_4 Apr 25.xlsx
